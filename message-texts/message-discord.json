@@ -1,0 +1,27 @@
+{
+  "content": "<@&764093823290310656> A New Lesson is going to start in 5 minutes!",
+  "embeds": [
+    {
+      "title": "[EVENT TITLE]",
+      "color": 485604,
+      "fields": [
+        {
+          "name": "Zoom URL",
+          "value": "📍 [LOCATION]",
+          "inline": true
+        },
+        {
+          "name": "Password",
+          "value": "[DESCRIPTION]",
+          "inline": true
+        }
+      ],
+      "author": {
+        "name": "YKC Raspored - 3B Science"
+      },
+      "footer": {
+        "text": "Mr Raspored Bot"
+      }
+    }
+  ]
+}
