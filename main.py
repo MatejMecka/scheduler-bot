@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import os
 
 import logging
-logging.basicConfig(filename='schedule_bot.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='schedule_bot.log', level=logging.DEBUG)
 
 class SchedulerBot:
     def __init__(self, platform, minutes_before_event):
