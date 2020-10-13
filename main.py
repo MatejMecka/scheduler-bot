@@ -4,6 +4,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from icalendar import Calendar, Event
 from platforms.notifier import Notifier
 from datetime import datetime, timedelta
+import os
 
 import logging
 logging.basicConfig(filename='schedule_bot.log', encoding='utf-8', level=logging.DEBUG)
@@ -50,7 +51,7 @@ class SchedulerBot:
         scheduler.start()
 
 
-def startBot(platform="discord", calType="file", calResource=None, minutes_before_event=5):
+def startBot(platform="discord", calType="file", calResource=os.environ["CAL_PATH"], minutes_before_event=5):
     """
     Start the bot
 
