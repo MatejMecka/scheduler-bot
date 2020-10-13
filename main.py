@@ -20,6 +20,7 @@ class SchedulerBot:
         """
         events = []
         calendar = Calendar.from_ical(cal_resource)
+        logging.info('Found the following events!')
         for event in calendar.walk():
             if event.name == "VEVENT":
                 event_data = {
@@ -28,6 +29,7 @@ class SchedulerBot:
                     "start_date": event["dtstart"].dt,
                     "location": event["location"].to_ical().decode('utf-8')
                 }
+                logging.info(event_data)
                 #print(event_data)
                 events.append(event_data)
         self.schedule_events(events)
