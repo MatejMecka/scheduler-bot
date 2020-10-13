@@ -2,4 +2,3 @@ fire
 apscheduler
 requests
 icalendar
-logging
