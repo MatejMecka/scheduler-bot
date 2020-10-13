@@ -6,8 +6,9 @@ from platforms.notifier import Notifier
 from datetime import datetime, timedelta
 
 import logging
+logging.basicConfig(filename='schedule_bot.log', encoding='utf-8', level=logging.DEBUG)
 
-class SchedulerBot():
+class SchedulerBot:
     def __init__(self, platform, minutes_before_event):
         self.platform = platform
         self.minutes_before_event = minutes_before_event
