@@ -2,3 +2,4 @@ fire
 apscheduler
 requests
 icalendar
+recurring-ical-events

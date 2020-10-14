@@ -2,15 +2,17 @@ import fire
 from datetime import date
 from apscheduler.schedulers.blocking import BlockingScheduler
 from icalendar import Calendar, Event
+import recurring_ical_events
 from platforms.notifier import Notifier
 from datetime import datetime, timedelta
 import os
 import logging
+from errors import NetworkRequestFailed, MissingResource
 #logging.basicConfig(filename='schedule_bot.log', level=logging.DEBUG)
 
 class SchedulerBot:
-    def __init__(self, platform, minutes_before_event):
-        self.platform = platform
+    def __init__(self, platform_data, minutes_before_event):
+        self.platform_data = platform_data
         self.minutes_before_event = minutes_before_event
 
     def parse_events(self, cal_resource):
@@ -21,7 +23,11 @@ class SchedulerBot:
         events = []
         calendar = Calendar.from_ical(cal_resource)
         logging.info('Found the following events!')
-        for event in calendar.walk():
+
+        start_date = (2020,1,1)
+        end_date = (2021,1,1)
+
+        for event in recurring_ical_events.of(calendar).between(start_date, end_date):
             if event.name == "VEVENT":
                 event_data = {
                     "subject": event["summary"].to_ical().decode('utf-8'),
@@ -37,7 +43,7 @@ class SchedulerBot:
 
     def schedule_events(self, events):
         jobs = []
-        notification_platform = Notifier(self.platform)
+        notification_platform = Notifier(self.platform_data)
 
         # Start the scheduler
         scheduler = BlockingScheduler()
@@ -50,7 +56,8 @@ class SchedulerBot:
         scheduler.start()
 
 
-def startBot(platform="discord", calType="file", calResource=os.environ["CAL_PATH"], minutes_before_event=5):
+def startBot(platform="discord", calType="file", calResource = None, minutes_before_event=5,
+             discord_webhook_url=None, telegram_api_token = None, telegram_chat_id = None):
     """
     Start the bot
 
@@ -58,7 +65,9 @@ def startBot(platform="discord", calType="file", calResource=os.environ["CAL_PAT
     :param calType: Local File or Online. file / network
     :param calResource: Link to the said file
     :param minutes_before_event: How many minutes before an event should the bot notify. Default 5
-
+    :param discord_webhook_url: The Webhook where the bot should post
+    :param telegram_api_token: The API Token for the bot
+    :param telegram_chat_id: The Chat ID where the messages should be sent
     """
 
     # Lower Text for easily parsing data
@@ -69,6 +78,16 @@ def startBot(platform="discord", calType="file", calResource=os.environ["CAL_PAT
     if calResource is None:
         raise MissingResource("URL or File was empty!")
 
+    if platform == "discord":
+        if discord_webhook_url is None:
+            raise MissingAuthData("A Webhook URL for Discord was not found! Exiting.")
+        platform_data = {"platform": "discord", "webhook_url": discord_webhook_url}
+    elif platform == "telegram":
+        if telegram_api_token is None:
+            raise MissingAuthData("A Token for Telegram was not found! Exiting.")
+        if telegram_chat_id is None:
+            raise MissingAuthData("A Chat ID for Telegram was not found! Exiting.")
+        platform_data = {"platform": "telegram", "api_token": telegram_api_token, "chat_id": telegram_chat_id}
 
 
     if calType == 'file':
@@ -85,7 +104,7 @@ def startBot(platform="discord", calType="file", calResource=os.environ["CAL_PAT
         except:
             raise NetworkRequestFailed(f"Network request failed!")
 
-    bot = SchedulerBot(platform, minutes_before_event)
+    bot = SchedulerBot(platform_data, minutes_before_event)
     bot.parse_events(file_content)
 
 if __name__ == '__main__':

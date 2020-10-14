@@ -1,0 +1,4 @@
+Event is starting soon!
+Title: [EVENT TITLE]
+Description: [LOCATION]
+Location: [DESCRIPTION]
