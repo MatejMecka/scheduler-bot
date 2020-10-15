@@ -1,4 +1,4 @@
-def replace_values(message_raw):
-    return message_raw.replace('[EVENT TITLE]', self.event_data['subject']) \
-        .replace('[DESCRIPTION]', self.event_data['description']) \
-        .replace('[LOCATION]', self.event_data['location'])
+def replace_values(message_raw, event_data):
+    return message_raw.replace('[EVENT TITLE]', event_data['subject']) \
+        .replace('[DESCRIPTION]', event_data['description']) \
+        .replace('[LOCATION]', event_data['location'])

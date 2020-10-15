@@ -17,7 +17,7 @@ class DiscordPlatform:
         :return:
         """
         message_raw = open('message-texts/message-discord.json').read()
-        message_raw = replace_values(message_raw)
+        message_raw = replace_values(message_raw, self.event_data)
         message_json = json.loads(message_raw)
         self.sendMessage(message_json)
 

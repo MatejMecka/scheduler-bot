@@ -17,7 +17,7 @@ class TelegramPlatform:
         :return:
         """
         message_raw = open('message-texts/message-telegram.txt').read()
-        message_raw = self.replace_values(message_raw)
+        message_raw = self.replace_values(message_raw, self.event_data)
         self.sendMessage(message_raw)
 
     def sendMessage(self, message_text):
